@@ -113,14 +113,6 @@ Classical models excelled at **segment-level stability**, while deep learning mo
 
 ---
 
-## My Contributions
-- Feature engineering & EDA
-- PCA-based clustering and persona interpretation
-- Forecasting evaluation and metric comparison
-- Result interpretation and business recommendations
-
----
-
 ## Attribution
 This repository is a **fork of the original team capstone repository**.  
 Original work completed collaboratively as part of a semester-long project.
