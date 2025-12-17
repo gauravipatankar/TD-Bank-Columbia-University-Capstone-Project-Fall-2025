@@ -1,53 +1,132 @@
-# Forecasting Customer Financial Behavior using LSTM  
+# Forecasting Customer Financial Behavior
+### A Two-Phase Framework Using Classical Time Series & Deep Learning
 
-## 📌 Overview  
-This project explores the use of **deep learning models (LSTM/GRU)** to forecast customer financial behavior, such as income changes, balance depletion, and potential financial stress.  
+**Capstone Project – Columbia University (DSI) | Industry Partner: TD Bank**
 
-Banks and financial institutions face challenges in scaling forecasting models from segment-level insights (e.g., age groups, income tiers) to **millions of individualized customer forecasts**. This project simulates that trade-off by comparing traditional time series models with advanced neural network approaches.  
+---
 
-## 🎯 Goals  
-1. **Segment-Level Forecasting (Baseline)**  
-   - Create time-indexed series grouped by customer segments (e.g., income tier, age group).  
-   - Apply **ARIMA**, **Exponential Smoothing**, and **Prophet** models.  
-   - Visualize and evaluate baseline forecasting performance.  
+## Project Overview
+This project aims to forecast customer spending behavior to support **risk management, liquidity planning, and personalized financial services** for a retail bank.
 
-2. **Customer-Level Forecasting with LSTM/GRU**  
-   - Engineer time-series sequences per customer (e.g., past N months of balances or income).  
-   - Train **LSTM/GRU models** across customer-level sequences.  
-   - Compare predictive accuracy and generalization against baseline models.  
+We propose a **two-phase forecasting framework**:
+1. **Cluster-level forecasting** using classical time series models to capture stable, aggregate spending patterns.
+2. **Individual-level forecasting** using deep learning models (LSTM, Transformer) to model nuanced customer behavior.
 
-## 📊 Dataset  
-Due to limitations in sharing private banking data, this project leverages **public datasets**. For example:  
-- [Bank Customer Transaction Analysis (Kaggle)]
+This approach balances **interpretability, scalability, and predictive accuracy**.
 
-**Data Details:**  
-- **Type:** Time series (balances, income, transactions)  
-- **Focus:** Checking and savings products (extendable to other customer-level data)  
+---
 
-## 🛠️ Methodology  
-1. **Data Collection & Preprocessing**  
-   - Scraping (API-based if applicable)  
-   - Cleaning, normalization, and feature engineering  
-   - Handling missing data and outliers  
+## Dataset
+- **Source:** Public bank transaction dataset  
+- **Time span:** 2010–2020  
+- **Granularity:** Transaction-level data aggregated to **monthly spending per customer**
 
-2. **Exploratory Data Analysis (EDA)**  
-   - Visualization of financial behavior trends  
-   - Segment analysis for baseline forecasting  
+Due to size constraints, raw data is hosted externally (see `data/README.md`).
 
-3. **Modeling**  
-   - **Phase 1:** Segment-level forecasting with ARIMA, Exponential Smoothing, Prophet  
-   - **Phase 2:** Customer-level forecasting with LSTM/GRU
-   
-## 🚀 Expected Outcome
-  - A validated LSTM model capable of forecasting individualized customer behavior.
-  - Benchmark comparisons between statistical models and deep learning approaches.
-  - Visual dashboards to illustrate segment-level and customer-level forecasts.
+---
 
-## 📚 Skills & Domains
-  - Statistics & Time Series Analysis
-  - Deep Learning (LSTM/GRU)
-  - Finance & Economics Applications
-  - Data Preprocessing & Visualization
+## Preprocessing & Feature Engineering
+- Aggregated transactions to monthly totals per customer
+- Handled missing values and extreme outliers
+- Engineered financial behavior features:
+  - Income utilization ratio
+  - Debt-to-income ratio
+  - Credit utilization ratio
+  - Multi-card usage indicator
 
-## 👩‍💻 Project Mentors
-  - TD Bank (Industry Affiliate)
+EDA revealed strong **seasonality and behavioral heterogeneity**, motivating segmentation.
+
+---
+
+## Customer Segmentation
+- Applied **PCA on 36 engineered features** (retained top 3 components)
+- Clustered customers into **4 personas** using K-Means:
+  1. Regular Spenders
+  2. Conservative Budgeters
+  3. Selective High-Value Purchasers
+  4. Debt-Burdened Consistent Spenders
+
+Segmentation enabled more stable cluster-level forecasting and targeted business insights.
+
+---
+
+## Phase 1: Cluster-Level Forecasting (Classical Models)
+**Models evaluated:**
+- SARIMA
+- Prophet
+- Holt-Winters
+
+**Key result:**  
+Holt-Winters achieved the **lowest MAPE across all clusters (≈1.1–1.5%)**, accurately capturing trend and seasonality.
+
+Cluster-level models provide:
+- Strong interpretability
+- Low computational cost
+- Reliable aggregate forecasts
+
+---
+
+## Phase 2: Individual-Level Forecasting (Deep Learning)
+
+### LSTM
+- 12-month rolling input windows
+- Trained with MSE loss and early stopping
+- Captures temporal dependencies but sensitive to outliers
+
+### Transformer
+- Encoder-only architecture
+- 2 layers, 4 attention heads, positional embeddings
+- More robust to irregular spending patterns
+
+**Best performing model:** Transformer  
+- MAE ≈ $606  
+- MAPE ≈ 18–19%  
+- Lightweight training (~3 minutes on minimal GPU)
+
+---
+
+## Evaluation Strategy
+- Rolling-window cohort-based train/validation/test split
+- Metrics used:
+  - MAE
+  - MSE
+  - RMSE
+  - MAPE
+
+Classical models excelled at **segment-level stability**, while deep learning models improved **individual personalization**.
+
+---
+
+## Key Insights & Business Implications
+- Classical models are effective for **segment trends** but limited by univariate assumptions
+- Individual spending depends on **multiple behavioral and financial drivers**
+- Deep learning models better capture this complexity
+- The two-phase framework enables **scalable personalization without sacrificing interpretability**
+
+---
+
+## Future Work
+- Robust outlier handling for extreme spending events
+- Improved feature selection and multicollinearity checks
+- Longer histories and additional behavioral signals
+- Hybrid approaches combining classical + neural forecasts
+
+---
+
+## My Contributions
+- Feature engineering & EDA
+- PCA-based clustering and persona interpretation
+- Forecasting evaluation and metric comparison
+- Result interpretation and business recommendations
+
+---
+
+## Attribution
+This repository is a **fork of the original team capstone repository**.  
+Original work completed collaboratively as part of a semester-long project.
+
+Team members:  
+**Gauravi Patankar**, Vi Mai, Zekai Su, Qinghui Zeng, Anouksha Rajesh
+
+Faculty Mentor: Yining Liu  
+Industry Mentors: Michael Borish, Sandeep Mandala
